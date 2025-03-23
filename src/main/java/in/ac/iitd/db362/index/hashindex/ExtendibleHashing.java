@@ -5,10 +5,7 @@ import in.ac.iitd.db362.parser.QueryNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.time.LocalDate;
 
 
@@ -52,39 +49,7 @@ public class ExtendibleHashing<T> implements Index<T> {
     public List<Integer> evaluate(QueryNode node) {
         logger.info("Evaluating predicate using Hash index on attribute " + attribute + " for operator " + node.operator);
         // TODO: Implement me!
-        if (node.isLeaf()) {
-            // Leaf node → Simple predicate (e.g., department = HR)
-            return search((T) node.value);
-        }
-
-        // Get results from left and right children (if they exist)
-        List<Integer> leftResult = node.left != null ? evaluate(node.left) : new ArrayList<>();
-        List<Integer> rightResult = node.right != null ? evaluate(node.right) : new ArrayList<>();
-
-        Set<Integer> resultSet = new HashSet<>();
-
-        switch (node.operator) {
-            case "AND":
-                resultSet.addAll(leftResult);
-                resultSet.retainAll(rightResult); // Intersection
-                break;
-            case "OR":
-                resultSet.addAll(leftResult);
-                resultSet.addAll(rightResult); // Union
-                break;
-            case "NOT":
-                Set<Integer> allRows = new HashSet<>();
-                for (int i = 0; i < maxRowId; i++) {
-                    allRows.add(i);
-                }
-                allRows.removeAll(leftResult); // Complement
-                resultSet = allRows;
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown operator: " + node.operator);
-        }
-
-        return new ArrayList<>(resultSet);
+        return null;
     }
 
     @Override

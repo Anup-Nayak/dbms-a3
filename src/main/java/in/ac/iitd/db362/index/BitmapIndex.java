@@ -6,8 +6,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Starter code for a BitMap Index
@@ -72,7 +74,39 @@ public class BitmapIndex<T> implements Index<T> {
     public List<Integer> evaluate(QueryNode node) {
         logger.info("Evaluating predicate using Bitmap index on attribute " + attribute + " for operator " + node.operator);
         // TODO: implement me
-        return null;
+        if (node.isLeaf()) {
+            // Leaf node → Simple predicate (e.g., department = HR)
+            return search((T) node.value);
+        }
+
+        // Get results from left and right children (if they exist)
+        List<Integer> leftResult = node.left != null ? evaluate(node.left) : new ArrayList<>();
+        List<Integer> rightResult = node.right != null ? evaluate(node.right) : new ArrayList<>();
+
+        Set<Integer> resultSet = new HashSet<>();
+
+        switch (node.operator) {
+            case "AND":
+                resultSet.addAll(leftResult);
+                resultSet.retainAll(rightResult); // Intersection
+                break;
+            case "OR":
+                resultSet.addAll(leftResult);
+                resultSet.addAll(rightResult); // Union
+                break;
+            case "NOT":
+                Set<Integer> allRows = new HashSet<>();
+                for (int i = 0; i < maxRowId; i++) {
+                    allRows.add(i);
+                }
+                allRows.removeAll(leftResult); // Complement
+                resultSet = allRows;
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown operator: " + node.operator);
+        }
+
+        return new ArrayList<>(resultSet);
     }
 
     @Override
