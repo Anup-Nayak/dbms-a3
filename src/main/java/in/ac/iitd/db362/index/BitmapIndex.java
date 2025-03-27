@@ -1,15 +1,16 @@
 package in.ac.iitd.db362.index;
 
+import in.ac.iitd.db362.parser.Operator;
 import in.ac.iitd.db362.parser.QueryNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Starter code for a BitMap Index
@@ -21,6 +22,8 @@ public class BitmapIndex<T> implements Index<T> {
 
     protected static final Logger logger = LogManager.getLogger();
 
+    private final Class<T> type;
+
     private String attribute;
     private int maxRowId;
 
@@ -28,10 +31,13 @@ public class BitmapIndex<T> implements Index<T> {
 
     /**
      * Constructor
+     *
+     * @param type
      * @param attribute
      * @param maxRowId
      */
-    public BitmapIndex(String attribute, int maxRowId) {
+    public BitmapIndex(Class<T> type, String attribute, int maxRowId) {
+        this.type = type;
         this.attribute = attribute;
         this.maxRowId = maxRowId;
         bitmaps = new HashMap<>();
@@ -74,39 +80,28 @@ public class BitmapIndex<T> implements Index<T> {
     public List<Integer> evaluate(QueryNode node) {
         logger.info("Evaluating predicate using Bitmap index on attribute " + attribute + " for operator " + node.operator);
         // TODO: implement me
-        if (node.isLeaf()) {
-            // Leaf node → Simple predicate (e.g., department = HR)
-            return search((T) node.value);
+        // Ensure the operator is EQUALS, as bitmap indexes do not support other comparisons
+        if (node.operator != Operator.EQUALS) {
+            throw new UnsupportedOperationException("Bitmap index only supports EQUALS operator");
         }
 
-        // Get results from left and right children (if they exist)
-        List<Integer> leftResult = node.left != null ? evaluate(node.left) : new ArrayList<>();
-        List<Integer> rightResult = node.right != null ? evaluate(node.right) : new ArrayList<>();
-
-        Set<Integer> resultSet = new HashSet<>();
-
-        switch (node.operator) {
-            case "AND":
-                resultSet.addAll(leftResult);
-                resultSet.retainAll(rightResult); // Intersection
-                break;
-            case "OR":
-                resultSet.addAll(leftResult);
-                resultSet.addAll(rightResult); // Union
-                break;
-            case "NOT":
-                Set<Integer> allRows = new HashSet<>();
-                for (int i = 0; i < maxRowId; i++) {
-                    allRows.add(i);
-                }
-                allRows.removeAll(leftResult); // Complement
-                resultSet = allRows;
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown operator: " + node.operator);
+        // Convert node.value to the appropriate type
+        T key;
+        if (type == Integer.class) {
+            key = (T) Integer.valueOf(node.value);
+        } else if (type == String.class) {  
+            key = (T) node.value;
+        } else if (type == Double.class) {
+            key = (T) Double.valueOf(node.value);
+        } else if (type == LocalDate.class) {
+            key = (T) LocalDate.parse(node.value);
+        } else {
+            throw new UnsupportedOperationException("Bitmap index does not support type " + type);
         }
 
-        return new ArrayList<>(resultSet);
+        // Call the search function with the converted key
+        return search(key);
+        
     }
 
     @Override
@@ -131,6 +126,7 @@ public class BitmapIndex<T> implements Index<T> {
         }
 
         return result;
+
     }
 
     @Override

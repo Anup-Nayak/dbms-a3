@@ -83,5 +83,9 @@ public class Catalog {
         }
         return null; // No appropriate index found.
     }
+
+    public void clear() {
+        catalogMap.clear();
+    }
 }
 

@@ -38,4 +38,20 @@ public class Node<K, V> {
         assert isLeaf;
         return this.next;
     }
+
+    public boolean isLeaf() {
+        return isLeaf;
+    }
+
+    public List<K> getKeys() {
+        return keys;
+    }
+
+    public List<V> getValues() {
+        return values;
+    }
+
+    public List<Node<K, V>> getChildren() {
+        return children;
+    }
 }

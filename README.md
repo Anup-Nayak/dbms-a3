@@ -65,12 +65,6 @@ There are two very simple tests that are provied in the ``src/test/java/in/ac/ii
 
 ## How and What to submit
 
- Create a patch file of your submission
-````
-cd path/to/assignment_3
-git diff [COMMITID] > [ENTRYNO].patch
- ````
->Repace [ENTRYNO] with your entry number.
->Replace [COMMITID] with the one that will be provided to you (this will be provided 2 days before the submission deadline)
+**See assignment doc!**
 
 **Upload your patch file on Moodle by 26th March 2025 11:59PM**

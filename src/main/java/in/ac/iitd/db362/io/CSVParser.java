@@ -86,50 +86,50 @@ public class CSVParser {
                             case "integer":
                                 // Use Integer for integer type.
                                 if (idxType.equalsIgnoreCase("BPlusTree")) {
-                                    catalog.addIndex(col.name, new BPlusTreeIndex<Integer>(col.name));
+                                    catalog.addIndex(col.name, new BPlusTreeIndex<Integer>(Integer.class, col.name));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 } else if (idxType.equalsIgnoreCase("Hash")) {
-                                    catalog.addIndex(col.name, new ExtendibleHashing<Integer>(col.name));
+                                    catalog.addIndex(col.name, new ExtendibleHashing<Integer>(Integer.class, col.name));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 } else if (idxType.equalsIgnoreCase("Bitmap")) {
-                                    catalog.addIndex(col.name, new BitmapIndex<Integer>(col.name, maxRowId));
+                                    catalog.addIndex(col.name, new BitmapIndex<Integer>(Integer.class, col.name, maxRowId));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 }
                                 break;
                             case "double":
                                 // Use Double for double type.
                                 if (idxType.equalsIgnoreCase("BPlusTree")) {
-                                    catalog.addIndex(col.name, new BPlusTreeIndex<Double>(col.name));
+                                    catalog.addIndex(col.name, new BPlusTreeIndex<Double>(Double.class, col.name));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 } else if (idxType.equalsIgnoreCase("Hash")) {
-                                    catalog.addIndex(col.name, new ExtendibleHashing<Double>(col.name));
+                                    catalog.addIndex(col.name, new ExtendibleHashing<Double>(Double.class, col.name));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 } else if (idxType.equalsIgnoreCase("Bitmap")) {
-                                    catalog.addIndex(col.name, new BitmapIndex<Double>(col.name, maxRowId));
+                                    catalog.addIndex(col.name, new BitmapIndex<Double>(Double.class, col.name, maxRowId));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 }
                                 break;
                             case "string":
                                 if (idxType.equalsIgnoreCase("BPlusTree")) {
-                                    catalog.addIndex(col.name, new BPlusTreeIndex<String>(col.name));
+                                    catalog.addIndex(col.name, new BPlusTreeIndex<String>(String.class, col.name));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 } else if (idxType.equalsIgnoreCase("Hash")) {
-                                    catalog.addIndex(col.name, new ExtendibleHashing<String>(col.name));
+                                    catalog.addIndex(col.name, new ExtendibleHashing<String>(String.class, col.name));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 } else if (idxType.equalsIgnoreCase("Bitmap")) {
-                                    catalog.addIndex(col.name, new BitmapIndex<String>(col.name, maxRowId));
+                                    catalog.addIndex(col.name, new BitmapIndex<String>(String.class, col.name, maxRowId));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 }
                                 break;
                             case "date":
                                 if (idxType.equalsIgnoreCase("BPlusTree")) {
-                                    catalog.addIndex(col.name, new BPlusTreeIndex<LocalDate>(col.name));
+                                    catalog.addIndex(col.name, new BPlusTreeIndex<LocalDate>(LocalDate.class, col.name));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 } else if (idxType.equalsIgnoreCase("Hash")) {
-                                    catalog.addIndex(col.name, new ExtendibleHashing<LocalDate>(col.name));
+                                    catalog.addIndex(col.name, new ExtendibleHashing<LocalDate>(LocalDate.class, col.name));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 } else if (idxType.equalsIgnoreCase("Bitmap")) {
-                                    catalog.addIndex(col.name, new BitmapIndex<LocalDate>(col.name, maxRowId));
+                                    catalog.addIndex(col.name, new BitmapIndex<LocalDate>(LocalDate.class, col.name, maxRowId));
                                     logger.info("Initialized a " + idxType + " Index on " + col.name + " of type " + col.type);
                                 }
                                 break;

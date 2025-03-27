@@ -52,7 +52,36 @@ public class QueryEvaluator {
         // Note: When traversing the parse tree, for each leaf node you must call
         // the evalautePredicate(node) method that is provided.
         // TODO: Implement me!
-        return null;
+        if (node == null) return new ArrayList<>();
+
+        if (node.operator == Operator.AND || node.operator == Operator.OR) {
+            // Postorder traversal: process children first
+            List<Integer> leftResult = evaluateQuery(node.left, maxRowId);
+            List<Integer> rightResult = evaluateQuery(node.right, maxRowId);
+
+            if (node.operator == Operator.AND) {
+                // Intersection for AND
+                leftResult.retainAll(rightResult);
+                return leftResult;
+            } else {
+                // Union for OR
+                Set<Integer> resultSet = new HashSet<>(leftResult);
+                resultSet.addAll(rightResult);
+                return new ArrayList<>(resultSet);
+            }
+        } else if (node.operator == Operator.NOT) {
+            // Postorder traversal for NOT
+            List<Integer> result = evaluateQuery(node.left, maxRowId);
+            Set<Integer> allRows = new HashSet<>();
+            for (int i = 0; i <= maxRowId; i++) {
+                allRows.add(i);
+            }
+            allRows.removeAll(result);
+            return new ArrayList<>(allRows);
+        } else {
+            // Leaf node (predicate)
+            return evaluatePredicate(node);
+        }
     }
 
 
